@@ -26,7 +26,7 @@ router.post(`${apiPrefix}/workouts/exercise-definition`, async (ctx) => {
     const { user, supabase } = ctx.state;
 
     const startTime = Date.now();
-    console.log(`[POST /exercises] Success`, {
+    console.log(`[POST /workouts/exercise-definition] Success`, {
       userId: user.id,
       duration: Date.now() - startTime,
     });
