@@ -1,8 +1,8 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 Planning Complete - Ready to Start Implementation
+**Status**: 🟡 In Progress - Phase 1 Complete
 **Last Updated**: 2025-11-17
-**Current Phase**: Phase 1 - Page Structure & Navigation
+**Current Phase**: Phase 2 - Muscle Group Selection
 
 ---
 
@@ -129,9 +129,9 @@ POST /api/v1/workouts/exercise
 
 ## 📋 Implementation Phases
 
-### **Phase 1: Page Structure & Navigation** ⬜ Not Started
+### **Phase 1: Page Structure & Navigation** ✅ Complete
 
-#### Task 1.1: Create the Add Exercise Page ⬜
+#### Task 1.1: Create the Add Exercise Page ✅
 - **File**: `webapp/src/app/dashboard/add-exercise/page.tsx`
 - **Type**: Server Component (for auth check) wrapping Client Component
 - **What to learn**:
@@ -162,10 +162,12 @@ POST /api/v1/workouts/exercise
     return <AddExerciseForm />;
   }
   ```
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Actual Implementation**: Removed auth check - middleware already handles route protection
+- **Files Created**: `webapp/src/app/dashboard/add-exercise/page.tsx`
 
-#### Task 1.2: Create the Header with Back Button ⬜
-- **File**: `webapp/src/components/dashboard/AddExerciseHeader.tsx`
+#### Task 1.2: Create the Header with Back Button ✅
+- **File**: `webapp/src/components/add-exercise/AddExerciseHeader.tsx`
 - **Type**: Client Component (uses navigation)
 - **What to learn**:
   - Next.js navigation with `useRouter`
@@ -185,7 +187,14 @@ POST /api/v1/workouts/exercise
   - Back button: Left aligned, clickable area ~44x44px
   - Title: Center aligned, `--text-primary`
   - Disable interactions when `isLoading={true}`
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Files Created**:
+  - `webapp/src/components/add-exercise/AddExerciseHeader.tsx`
+  - Added `ArrowLeftIcon` to `webapp/src/components/ui/icons.tsx`
+- **Key Learnings**:
+  - Used `next/navigation` instead of `next/router` for App Router
+  - Created reusable SVG icon following existing patterns
+  - Implemented disabled state for form submission blocking
 
 ---
 
@@ -612,11 +621,11 @@ This implementation will teach:
 
 ## 📊 Progress Tracking
 
-### Overall Progress: 0/16 tasks completed (0%)
+### Overall Progress: 2/16 tasks completed (12.5%)
 
 | Phase | Tasks | Completed | Status |
 |-------|-------|-----------|--------|
-| Phase 1: Page Structure & Navigation | 2 | 0 | ⬜ Not Started |
+| Phase 1: Page Structure & Navigation | 2 | 2 | ✅ Completed |
 | Phase 2: Muscle Group Selection | 1 | 0 | ⬜ Not Started |
 | Phase 3: Exercise Search & Selection | 2 | 0 | ⬜ Not Started |
 | Phase 4: Sets Performance Section | 2 | 0 | ⬜ Not Started |
@@ -635,19 +644,26 @@ This implementation will teach:
 
 ## 🔄 Change Log
 
-### 2025-11-17
+### 2025-11-17 - Session 1
 - ✅ Initial plan created
 - ✅ All 8 phases defined with 16 tasks
 - ✅ API endpoints documented
 - ✅ Design requirements captured
 - ✅ Learning objectives identified
-- 🟢 Ready to start Phase 1
+- ✅ **Phase 1 Complete**:
+  - Created `webapp/src/app/dashboard/add-exercise/page.tsx`
+  - Created `webapp/src/components/add-exercise/AddExerciseHeader.tsx`
+  - Added `ArrowLeftIcon` to `webapp/src/components/ui/icons.tsx`
+  - Learned about Next.js App Router vs Pages Router
+  - Learned that middleware already protects `/dashboard/*` routes
+  - Header with back navigation working
+- 🟢 Ready to start Phase 2: Muscle Group Selection
 
 ---
 
 ## 🚀 Next Steps
 
-**Current Task**: Phase 1, Task 1.1 - Create the Add Exercise Page
+**Current Task**: Phase 2, Task 2.1 - Create Horizontal Scrollable Muscle Group Selector
 
 **To Continue**:
 1. Read this document to understand context
