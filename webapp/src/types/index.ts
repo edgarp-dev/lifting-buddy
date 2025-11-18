@@ -31,3 +31,11 @@ export interface ApiResponse<T> {
     error: string | null;
     data: T | null;
 }
+
+export interface ExerciseDefinition {
+    id: string;
+    name: string;
+    muscle_group: string;
+    created_at: string;
+    updated_at: string;
+}

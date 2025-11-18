@@ -1,7 +1,7 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 2 Complete
-**Last Updated**: 2025-11-17
+**Status**: 🟡 In Progress - Phase 3 (Step 3/7)
+**Last Updated**: 2025-11-18
 **Current Phase**: Phase 3 - Exercise Name Search & Selection
 
 ---
@@ -253,26 +253,36 @@ POST /api/v1/workouts/exercise
 
 ---
 
-### **Phase 3: Exercise Name Search & Selection** ⬜ Not Started
+### **Phase 3: Exercise Name Search & Selection** 🟡 In Progress
 
-#### Task 3.1: Create Exercise Name Input with Search ⬜
-- **File**: `webapp/src/components/dashboard/ExerciseNameInput.tsx`
+#### Task 3.1: Create Exercise Name Input with Search 🟡
+- **File**: `webapp/src/components/add-exercise/ExerciseNameInput.tsx`
 - **Type**: Client Component
 - **What to learn**:
   - Debouncing user input
-  - API calls with `apiClient`
+  - API calls with `api` client
   - Dropdown/Autocomplete UI patterns
   - Loading states for search
   - Click outside to close dropdown
-- **Implementation Steps**:
-  1. Create component with states: `searchQuery`, `results`, `isSearching`, `isOpen`
-  2. Import `apiClient` from `@/lib/api`
-  3. Implement debounce (300ms) using `useEffect` + cleanup
-  4. Call `apiClient.get('/search/exercises?q=' + query)` when debounce fires
-  5. Display results in dropdown below input
-  6. Handle result click to select exercise
-  7. Add loading spinner while searching
-  8. Close dropdown when clicking outside (use ref + event listener)
+- **Implementation Approach**: Step-by-step learning (Option A)
+- **Step-by-Step Progress**:
+  - ✅ **Step 1**: Updated API client with `searchExercises` method
+    - Added to `webapp/src/lib/api.ts`
+    - Used proper TypeScript generics: `ApiResponse<ExerciseDefinition[]>`
+    - Encoded query parameter with `encodeURIComponent(query)`
+  - ✅ **Step 2**: Created basic component structure
+    - Added state: `results`, `isSearching`, `isOpen`
+    - Added ref: `containerRef` for click-outside detection
+    - Imported `Input` component and `ExerciseDefinition` type
+  - ✅ **Step 3**: Added debouncing logic
+    - useEffect triggers when `value` changes
+    - Early return if `value.length < 2`
+    - 300ms setTimeout for debouncing
+    - Cleanup function clears timeout
+  - ⬜ **Step 4**: Add API call to search function
+  - ⬜ **Step 5**: Build dropdown UI with results
+  - ⬜ **Step 6**: Add click-outside detection
+  - ⬜ **Step 7**: Integrate with form
 - **Design Specs**:
   - Input field using existing `Input` component from `@/components/ui/Input.tsx`
   - Dropdown: Absolute positioned, max-height with scroll
@@ -285,10 +295,11 @@ POST /api/v1/workouts/exercise
     value: string;
     onChange: (value: string) => void;
     onSelectExercise: (exercise: ExerciseDefinition) => void;
+    muscleGroup: string;
     disabled?: boolean;
   }
   ```
-- **Status**: ⬜ Not Started
+- **Status**: 🟡 In Progress (Step 3/7 completed)
 
 #### Task 3.2: Add "Create New Exercise" Button ⬜
 - **File**: Part of `ExerciseNameInput.tsx` or separate component
@@ -680,7 +691,20 @@ This implementation will teach:
   - Added edge-to-edge scrolling optimization
   - Touch feedback with scale animation
   - State lifted to form wrapper component
-- 🟢 Ready to start Phase 3: Exercise Name Search & Selection
+
+### 2025-11-18 - Session 2
+- 🟡 **Phase 3 In Progress** (Task 3.1, Step 3/7):
+  - Updated `webapp/src/lib/api.ts` with `searchExercises` method
+  - Added `ExerciseDefinition` interface to `webapp/src/types/index.ts`
+  - Created `webapp/src/components/add-exercise/ExerciseNameInput.tsx`
+  - Implemented basic component structure with state and refs
+  - Added debouncing logic with useEffect and setTimeout cleanup
+  - **Key Learnings**:
+    - TypeScript generics for API responses
+    - URL encoding with `encodeURIComponent`
+    - Debouncing pattern with useEffect cleanup
+    - Controlled input pattern in React
+  - **Next**: Add actual API call to replace console.log
 
 ---
 

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import { ApiResponse, WeeklySession } from "@/types";
+import { ApiResponse, ExerciseDefinition, WeeklySession } from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
     token?: string;
@@ -12,10 +12,18 @@ class ApiClient {
         this.baseUrl = baseUrl;
     }
 
-    // Workout endpoints
     async getWeeklySummary() {
         return this.request<ApiResponse<WeeklySession[]>>(
             "/api/v1/workouts/week",
+            {
+                method: "GET",
+            },
+        );
+    }
+
+    async searchExercises(query: string) {
+        return this.request<ApiResponse<ExerciseDefinition[]>>(
+            `/api/v1/search/exercises?q=${encodeURIComponent(query)}`,
             {
                 method: "GET",
             },
