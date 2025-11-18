@@ -1,6 +1,6 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 3 (Step 3/7)
+**Status**: 🟡 In Progress - Phase 3 (Step 4/7)
 **Last Updated**: 2025-11-18
 **Current Phase**: Phase 3 - Exercise Name Search & Selection
 
@@ -279,7 +279,15 @@ POST /api/v1/workouts/exercise
     - Early return if `value.length < 2`
     - 300ms setTimeout for debouncing
     - Cleanup function clears timeout
-  - ⬜ **Step 4**: Add API call to search function
+  - ✅ **Step 4**: Add API call to search function
+    - Made setTimeout callback async
+    - Added try-catch-finally for error handling
+    - Set `isSearching` to true before API call
+    - Called `api.searchExercises(value)`
+    - Validated response with `response.success && response.data`
+    - Updated `results` and `isOpen` on success
+    - Cleared results and logged error on failure
+    - Always set `isSearching` to false in finally block
   - ⬜ **Step 5**: Build dropdown UI with results
   - ⬜ **Step 6**: Add click-outside detection
   - ⬜ **Step 7**: Integrate with form
@@ -299,7 +307,7 @@ POST /api/v1/workouts/exercise
     disabled?: boolean;
   }
   ```
-- **Status**: 🟡 In Progress (Step 3/7 completed)
+- **Status**: 🟡 In Progress (Step 4/7 completed)
 
 #### Task 3.2: Add "Create New Exercise" Button ⬜
 - **File**: Part of `ExerciseNameInput.tsx` or separate component
@@ -693,18 +701,27 @@ This implementation will teach:
   - State lifted to form wrapper component
 
 ### 2025-11-18 - Session 2
-- 🟡 **Phase 3 In Progress** (Task 3.1, Step 3/7):
+- 🟡 **Phase 3 In Progress** (Task 3.1, Step 4/7):
   - Updated `webapp/src/lib/api.ts` with `searchExercises` method
   - Added `ExerciseDefinition` interface to `webapp/src/types/index.ts`
   - Created `webapp/src/components/add-exercise/ExerciseNameInput.tsx`
   - Implemented basic component structure with state and refs
   - Added debouncing logic with useEffect and setTimeout cleanup
+  - **Step 4 Complete**: Added API call with full error handling
+    - Async function in setTimeout callback
+    - Try-catch-finally pattern for robust error handling
+    - Loading state management with `isSearching`
+    - Response validation before state updates
+    - Error logging and graceful degradation
   - **Key Learnings**:
     - TypeScript generics for API responses
     - URL encoding with `encodeURIComponent`
     - Debouncing pattern with useEffect cleanup
     - Controlled input pattern in React
-  - **Next**: Add actual API call to replace console.log
+    - Async/await in setTimeout callbacks
+    - Try-catch-finally error handling pattern
+    - Defensive programming with response validation
+  - **Next**: Build dropdown UI to display search results
 
 ---
 

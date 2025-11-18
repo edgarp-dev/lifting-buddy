@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { ExerciseDefinition } from "@/types";
+import { api } from "@/lib/api";
 
 interface ExerciseNameInputProps {
     value: string;
@@ -32,8 +33,21 @@ export function ExerciseNameInput({
             return;
         }
 
-        const timer = setTimeout(() => {
-            console.log('Searching for:', value);
+        const timer = setTimeout(async () => {
+            try {
+                setIsSearching(true);
+                const response = await api.searchExercises(value);
+
+                if (response.success && response.data) {
+                    setResults(response.data);
+                    setIsOpen(true);
+                }
+            } catch (error) {
+                console.error("Search failed:", error);
+                setResults([]);
+            } finally {
+                setIsSearching(false);
+            }
         }, 300);
 
         return () => clearTimeout(timer);
