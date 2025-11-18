@@ -1,8 +1,8 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 1 Complete
+**Status**: 🟡 In Progress - Phase 2 Complete
 **Last Updated**: 2025-11-17
-**Current Phase**: Phase 2 - Muscle Group Selection
+**Current Phase**: Phase 3 - Exercise Name Search & Selection
 
 ---
 
@@ -198,10 +198,10 @@ POST /api/v1/workouts/exercise
 
 ---
 
-### **Phase 2: Muscle Group Selection** ⬜ Not Started
+### **Phase 2: Muscle Group Selection** ✅ Complete
 
-#### Task 2.1: Create Horizontal Scrollable Muscle Group Selector ⬜
-- **File**: `webapp/src/components/dashboard/MuscleGroupSelector.tsx`
+#### Task 2.1: Create Horizontal Scrollable Muscle Group Selector ✅
+- **File**: `webapp/src/components/add-exercise/MuscleGroupSelector.tsx`
 - **Type**: Client Component
 - **What to learn**:
   - Horizontal scroll UI patterns
@@ -234,7 +234,22 @@ POST /api/v1/workouts/exercise
     disabled?: boolean;
   }
   ```
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Files Created**:
+  - `webapp/src/components/add-exercise/MuscleGroupSelector.tsx`
+  - `webapp/src/components/add-exercise/AddExerciseForm.tsx`
+- **Key Learnings**:
+  - Horizontal scroll with snap points for smooth mobile UX
+  - Hidden scrollbar using custom CSS (`.scrollbar-hide`)
+  - Edge-to-edge scrolling with negative margins (`-mx-4 px-4`)
+  - Touch feedback with `active:scale-95`
+  - State management pattern: lift state to parent component
+  - Added "Core" muscle group in addition to the original 6
+- **Mobile Optimizations**:
+  - `snap-x snap-mandatory` for smooth scrolling
+  - `flex-shrink-0` to prevent button sizing issues
+  - `active:scale-95` for native-app-like touch feedback
+  - Scrollbar completely hidden for clean look
 
 ---
 
@@ -621,12 +636,12 @@ This implementation will teach:
 
 ## 📊 Progress Tracking
 
-### Overall Progress: 2/16 tasks completed (12.5%)
+### Overall Progress: 3/16 tasks completed (18.75%)
 
 | Phase | Tasks | Completed | Status |
 |-------|-------|-----------|--------|
 | Phase 1: Page Structure & Navigation | 2 | 2 | ✅ Completed |
-| Phase 2: Muscle Group Selection | 1 | 0 | ⬜ Not Started |
+| Phase 2: Muscle Group Selection | 1 | 1 | ✅ Completed |
 | Phase 3: Exercise Search & Selection | 2 | 0 | ⬜ Not Started |
 | Phase 4: Sets Performance Section | 2 | 0 | ⬜ Not Started |
 | Phase 5: Form Submission & Feedback | 3 | 0 | ⬜ Not Started |
@@ -657,13 +672,21 @@ This implementation will teach:
   - Learned about Next.js App Router vs Pages Router
   - Learned that middleware already protects `/dashboard/*` routes
   - Header with back navigation working
-- 🟢 Ready to start Phase 2: Muscle Group Selection
+- ✅ **Phase 2 Complete**:
+  - Created `webapp/src/components/add-exercise/MuscleGroupSelector.tsx`
+  - Created `webapp/src/components/add-exercise/AddExerciseForm.tsx`
+  - Implemented mobile-first horizontal scrolling with snap points
+  - Hidden scrollbar for cleaner mobile UI
+  - Added edge-to-edge scrolling optimization
+  - Touch feedback with scale animation
+  - State lifted to form wrapper component
+- 🟢 Ready to start Phase 3: Exercise Name Search & Selection
 
 ---
 
 ## 🚀 Next Steps
 
-**Current Task**: Phase 2, Task 2.1 - Create Horizontal Scrollable Muscle Group Selector
+**Current Task**: Phase 3, Task 3.1 - Create Exercise Name Input with Search
 
 **To Continue**:
 1. Read this document to understand context

@@ -77,3 +77,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   right: 0;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
