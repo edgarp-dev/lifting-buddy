@@ -179,3 +179,4 @@ Required in `webapp/.env.local`:
 - Every task needs to be separated into multiple small tasks
 - Every task sould be approached as a learning step, code needs to be explained and let the user write the code
 - After each task a context file with the relevant instructions needs to be updated or created so it can be referenced in the next task
+- Your context window will be automatically compacted as it approaches its limit, allowing you to continue working indefinitely from where you left off. Therefore, do not stop tasks early due to token budget concerns. As you approach your token budget limit, save your current progress and state to memory before the context window refreshes. Always be as persistent and autonomous as possible and complete tasks fully, even if the end of your budget is approaching. Never artificially stop any task early regardless of the context remaining.

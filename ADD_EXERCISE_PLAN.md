@@ -1,8 +1,8 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 3 (Step 4/7)
-**Last Updated**: 2025-11-18
-**Current Phase**: Phase 3 - Exercise Name Search & Selection
+**Status**: 🟡 In Progress - Phase 4
+**Last Updated**: 2025-11-24
+**Current Phase**: Phase 4 - Sets Performance Section
 
 ---
 
@@ -253,9 +253,9 @@ POST /api/v1/workouts/exercise
 
 ---
 
-### **Phase 3: Exercise Name Search & Selection** 🟡 In Progress
+### **Phase 3: Exercise Name Search & Selection** ✅ Complete
 
-#### Task 3.1: Create Exercise Name Input with Search 🟡
+#### Task 3.1: Create Exercise Name Input with Search ✅
 - **File**: `webapp/src/components/add-exercise/ExerciseNameInput.tsx`
 - **Type**: Client Component
 - **What to learn**:
@@ -267,67 +267,33 @@ POST /api/v1/workouts/exercise
 - **Implementation Approach**: Step-by-step learning (Option A)
 - **Step-by-Step Progress**:
   - ✅ **Step 1**: Updated API client with `searchExercises` method
-    - Added to `webapp/src/lib/api.ts`
-    - Used proper TypeScript generics: `ApiResponse<ExerciseDefinition[]>`
-    - Encoded query parameter with `encodeURIComponent(query)`
   - ✅ **Step 2**: Created basic component structure
-    - Added state: `results`, `isSearching`, `isOpen`
-    - Added ref: `containerRef` for click-outside detection
-    - Imported `Input` component and `ExerciseDefinition` type
   - ✅ **Step 3**: Added debouncing logic
-    - useEffect triggers when `value` changes
-    - Early return if `value.length < 2`
-    - 300ms setTimeout for debouncing
-    - Cleanup function clears timeout
   - ✅ **Step 4**: Add API call to search function
-    - Made setTimeout callback async
-    - Added try-catch-finally for error handling
-    - Set `isSearching` to true before API call
-    - Called `api.searchExercises(value)`
-    - Validated response with `response.success && response.data`
-    - Updated `results` and `isOpen` on success
-    - Cleared results and logged error on failure
-    - Always set `isSearching` to false in finally block
-  - ⬜ **Step 5**: Build dropdown UI with results
-  - ⬜ **Step 6**: Add click-outside detection
-  - ⬜ **Step 7**: Integrate with form
-- **Design Specs**:
-  - Input field using existing `Input` component from `@/components/ui/Input.tsx`
-  - Dropdown: Absolute positioned, max-height with scroll
-  - Each result: Shows exercise name (bold) and muscle group (gray)
-  - Highlight on hover
-  - Background: `--background-secondary`
-- **Props**:
-  ```typescript
-  interface ExerciseNameInputProps {
-    value: string;
-    onChange: (value: string) => void;
-    onSelectExercise: (exercise: ExerciseDefinition) => void;
-    muscleGroup: string;
-    disabled?: boolean;
-  }
-  ```
-- **Status**: 🟡 In Progress (Step 4/7 completed)
+  - ✅ **Step 5**: Build dropdown UI with results
+  - ✅ **Step 6**: Add click-outside detection
+  - ✅ **Step 7**: Integrate with form
+- **Status**: ✅ Complete
+- **Key Learnings**:
+  - Absolute positioning with `z-10` for dropdown overlay
+  - `max-h-60 overflow-y-auto` for scrollable dropdown
+  - Hover states with `hover:bg-[var(--background-tertiary)]`
+  - Click-outside detection with `useEffect` and `document.addEventListener`
+  - Cleanup functions to prevent memory leaks
 
-#### Task 3.2: Add "Create New Exercise" Button ⬜
-- **File**: Part of `ExerciseNameInput.tsx` or separate component
+#### Task 3.2: Add "Create New Exercise" Button ✅
+- **File**: Part of `ExerciseNameInput.tsx`
 - **What to learn**:
   - Conditional rendering based on search results
   - API POST requests
   - Optimistic UI updates
-- **Implementation Steps**:
-  1. Show button only when `searchQuery.length > 0 && results.length === 0 && !isSearching`
-  2. Button text: `"Create '{searchQuery}'"`
-  3. Add loading state for creation
-  4. On click: Call `apiClient.post('/workouts/exercise-definition', { name, muscle_group })`
-  5. On success: Call `onSelectExercise` with new exercise data
-  6. On error: Show error message
-  7. Clear search and close dropdown after creation
-- **Design Specs**:
-  - Appears in dropdown area
-  - Uses primary button style
-  - Shows loading spinner during creation
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Implementation**:
+  - Added `isCreating` state for loading
+  - Added `createExerciseDefinition` method to API client
+  - Button shows when no results found
+  - Disabled when no muscle group selected (with warning message)
+  - On success: selects the new exercise and closes dropdown
 
 ---
 
@@ -655,13 +621,13 @@ This implementation will teach:
 
 ## 📊 Progress Tracking
 
-### Overall Progress: 3/16 tasks completed (18.75%)
+### Overall Progress: 5/15 tasks completed (33%)
 
 | Phase | Tasks | Completed | Status |
 |-------|-------|-----------|--------|
 | Phase 1: Page Structure & Navigation | 2 | 2 | ✅ Completed |
 | Phase 2: Muscle Group Selection | 1 | 1 | ✅ Completed |
-| Phase 3: Exercise Search & Selection | 2 | 0 | ⬜ Not Started |
+| Phase 3: Exercise Search & Selection | 2 | 2 | ✅ Completed |
 | Phase 4: Sets Performance Section | 2 | 0 | ⬜ Not Started |
 | Phase 5: Form Submission & Feedback | 3 | 0 | ⬜ Not Started |
 | Phase 6: TypeScript Types | 1 | 0 | ⬜ Not Started |
@@ -701,47 +667,45 @@ This implementation will teach:
   - State lifted to form wrapper component
 
 ### 2025-11-18 - Session 2
-- 🟡 **Phase 3 In Progress** (Task 3.1, Step 4/7):
-  - Updated `webapp/src/lib/api.ts` with `searchExercises` method
-  - Added `ExerciseDefinition` interface to `webapp/src/types/index.ts`
-  - Created `webapp/src/components/add-exercise/ExerciseNameInput.tsx`
-  - Implemented basic component structure with state and refs
-  - Added debouncing logic with useEffect and setTimeout cleanup
-  - **Step 4 Complete**: Added API call with full error handling
-    - Async function in setTimeout callback
-    - Try-catch-finally pattern for robust error handling
-    - Loading state management with `isSearching`
-    - Response validation before state updates
-    - Error logging and graceful degradation
+- Started Phase 3 implementation
+- Added API client methods and basic component structure
+
+### 2025-11-24 - Session 3
+- ✅ **Phase 3 Complete**:
+  - **Task 3.1**: Exercise Name Input with Search
+    - Built dropdown UI with search results
+    - Added click-outside detection using `useRef` and `document.addEventListener`
+    - Integrated component with AddExerciseForm
+    - Absolute positioning with z-index for proper layering
+    - Hover states and scrollable results list
+  - **Task 3.2**: Create New Exercise Button
+    - Added `createExerciseDefinition` method to API client
+    - Button appears when no search results found
+    - Shows warning when muscle group not selected
+    - Loading state during creation
   - **Key Learnings**:
-    - TypeScript generics for API responses
-    - URL encoding with `encodeURIComponent`
-    - Debouncing pattern with useEffect cleanup
-    - Controlled input pattern in React
-    - Async/await in setTimeout callbacks
-    - Try-catch-finally error handling pattern
-    - Defensive programming with response validation
-  - **Next**: Build dropdown UI to display search results
+    - Click-outside pattern with cleanup functions
+    - Conditional rendering based on multiple states
+    - Form integration with lifted state pattern
 
 ---
 
 ## 🚀 Next Steps
 
-**Current Task**: Phase 3, Task 3.1 - Create Exercise Name Input with Search
+**Current Task**: Phase 4 - Sets Performance Section
 
 **To Continue**:
 1. Read this document to understand context
-2. Check the "Progress Tracking" section to see what's completed
-3. Start with the current task or next incomplete task
+2. Start with Task 4.1: Create SetRow component
+3. Then Task 4.2: Create SetsManager component
 4. Update task status as you work (⬜ → 🟡 → ✅)
 5. Update the Change Log when completing phases
-6. Document any issues or learnings in the relevant task section
 
 **Quick Start Command**:
 ```bash
 cd webapp
 npm run dev
-# Visit http://localhost:3000/dashboard/add-exercise (after implementing)
+# Visit http://localhost:3000/dashboard/add-exercise
 ```
 
 ---

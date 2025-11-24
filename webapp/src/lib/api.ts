@@ -2,72 +2,81 @@ import { createClient } from "@/lib/supabase/client";
 import { ApiResponse, ExerciseDefinition, WeeklySession } from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
-    token?: string;
+	token?: string;
 }
 
 class ApiClient {
-    private baseUrl: string;
+	private baseUrl: string;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
-    }
+	constructor(baseUrl: string) {
+		this.baseUrl = baseUrl;
+	}
 
-    async getWeeklySummary() {
-        return this.request<ApiResponse<WeeklySession[]>>(
-            "/api/v1/workouts/week",
-            {
-                method: "GET",
-            },
-        );
-    }
+	async getWeeklySummary() {
+		return this.request<ApiResponse<WeeklySession[]>>("/api/v1/workouts/week", {
+			method: "GET",
+		});
+	}
 
-    async searchExercises(query: string) {
-        return this.request<ApiResponse<ExerciseDefinition[]>>(
-            `/api/v1/search/exercises?q=${encodeURIComponent(query)}`,
-            {
-                method: "GET",
-            },
-        );
-    }
+	async searchExercises(query: string) {
+		return this.request<ApiResponse<ExerciseDefinition[]>>(
+			`/api/v1/search/exercises?q=${encodeURIComponent(query)}`,
+			{
+				method: "GET",
+			}
+		);
+	}
 
-    private async request<T>(
-        endpoint: string,
-        options: ApiRequestOptions = {},
-    ): Promise<T> {
-        const { token, ...fetchOptions } = options;
+	async createExerciseDefinition(name: string, muscleGroup: string) {
+		return this.request<ApiResponse<ExerciseDefinition>>(
+			"/api/v1/workouts/exercise-definition",
+			{
+				method: "POST",
+				body: JSON.stringify({ name, muscle_group: muscleGroup }),
+			}
+		);
+	}
 
-        const authToken = token || await this.getAuthToken();
+	private async request<T>(
+		endpoint: string,
+		options: ApiRequestOptions = {}
+	): Promise<T> {
+		const { token, ...fetchOptions } = options;
 
-        const headers = new Headers(fetchOptions.headers as HeadersInit);
-        headers.set("Content-Type", "application/json");
+		const authToken = token || (await this.getAuthToken());
 
-        if (authToken) {
-            headers.set("Authorization", `Bearer ${authToken}`);
-        }
+		const headers = new Headers(fetchOptions.headers as HeadersInit);
+		headers.set("Content-Type", "application/json");
 
-        const response = await fetch(`${this.baseUrl}${endpoint}`, {
-            ...fetchOptions,
-            headers,
-        });
+		if (authToken) {
+			headers.set("Authorization", `Bearer ${authToken}`);
+		}
 
-        if (!response.ok) {
-            const error = await response.json().catch(() => ({
-                message: "An error occurred",
-            }));
-            throw new Error(error.message || `HTTP ${response.status}`);
-        }
+		const response = await fetch(`${this.baseUrl}${endpoint}`, {
+			...fetchOptions,
+			headers,
+		});
 
-        return response.json();
-    }
+		if (!response.ok) {
+			const error = await response.json().catch(() => ({
+				message: "An error occurred",
+			}));
+			throw new Error(error.message || `HTTP ${response.status}`);
+		}
 
-    private async getAuthToken(): Promise<string | null> {
-        const supabase = createClient();
-        const { data: { session } } = await supabase.auth.getSession();
-        return session?.access_token || null;
-    }
+		return response.json();
+	}
+
+	private async getAuthToken(): Promise<string | null> {
+		const supabase = createClient();
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+		return session?.access_token || null;
+	}
 }
 
 // Export singleton instance
 export const api = new ApiClient(
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+	process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 );
