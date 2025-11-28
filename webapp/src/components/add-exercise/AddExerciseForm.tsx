@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { MuscleGroupSelector } from "./MuscleGroupSelector";
 import { ExerciseNameInput } from "./ExerciseNameInput";
-import { ExerciseDefinition } from "@/types";
+import { ExerciseDefinition, WorkoutSet } from "@/types";
+import { SetsManager } from "./SetsManager";
 
 export function AddExerciseForm() {
 	const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string>("");
 	const [exerciseName, setExerciseName] = useState<string>("");
 	const [selectedExercise, setSelectedExercise] =
 		useState<ExerciseDefinition | null>(null);
+	const [sets, setSets] = useState<WorkoutSet[]>([]);
 
 	return (
 		<main className="container mx-auto px-4 py-8 max-w-2xl">
@@ -25,12 +27,7 @@ export function AddExerciseForm() {
 					muscleGroup={selectedMuscleGroup}
 				/>
 			</div>
-			{selectedExercise && (
-				<p className="text-[var(--text-primary)] mt-4">
-					Selected Exercise: {selectedExercise.name} (
-					{selectedExercise.muscle_group})
-				</p>
-			)}
+			{selectedExercise && <SetsManager sets={sets} onSetsChange={setSets} />}
 		</main>
 	);
 }

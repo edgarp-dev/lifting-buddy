@@ -39,3 +39,9 @@ export interface ExerciseDefinition {
     created_at: string;
     updated_at: string;
 }
+
+export interface WorkoutSet {
+    set: number;
+    reps: number;
+    weight_kg: number;
+}

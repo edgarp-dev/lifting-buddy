@@ -1,8 +1,8 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 4
+**Status**: 🟡 In Progress - Phase 5
 **Last Updated**: 2025-11-24
-**Current Phase**: Phase 4 - Sets Performance Section
+**Current Phase**: Phase 5 - Form Submission & Feedback
 
 ---
 
@@ -297,10 +297,10 @@ POST /api/v1/workouts/exercise
 
 ---
 
-### **Phase 4: Sets Performance Section** ⬜ Not Started
+### **Phase 4: Sets Performance Section** ✅ Complete
 
-#### Task 4.1: Create Set Row Component ⬜
-- **File**: `webapp/src/components/dashboard/SetRow.tsx`
+#### Task 4.1: Create Set Row Component ✅
+- **File**: `webapp/src/components/add-exercise/SetRow.tsx`
 - **Type**: Client Component
 - **What to learn**:
   - Controlled form inputs
@@ -330,10 +330,16 @@ POST /api/v1/workouts/exercise
     disabled?: boolean;
   }
   ```
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Key Learnings**:
+  - Grid layout with specific column widths: `grid-cols-[50px_1fr_1fr_44px]`
+  - Controlled inputs with `value || ""` pattern for empty display
+  - Number inputs with `min="0"` and `step="0.5"` for weight
+  - Delete button with hover effect and aria-label for accessibility
+  - Created TrashIcon in `webapp/src/components/ui/icons.tsx`
 
-#### Task 4.2: Create Sets Manager Component ⬜
-- **File**: `webapp/src/components/dashboard/SetsManager.tsx`
+#### Task 4.2: Create Sets Manager Component ✅
+- **File**: `webapp/src/components/add-exercise/SetsManager.tsx`
 - **Type**: Client Component
 - **What to learn**:
   - Array state management
@@ -359,7 +365,14 @@ POST /api/v1/workouts/exercise
     disabled?: boolean;
   }
   ```
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
+- **Key Learnings**:
+  - Array immutability: `[...sets, newSet]` for adding items
+  - Renumbering after deletion: `newSets.map((set, i) => ({ ...set, set: i + 1 }))`
+  - "Copy Previous" disabled when no sets exist: `disabled || sets.length === 0`
+  - Props-based state management (lifted state pattern)
+  - Grid layout matching SetRow for proper column alignment
+  - Added WorkoutSet type to `webapp/src/types/index.ts`
 
 ---
 
@@ -621,14 +634,14 @@ This implementation will teach:
 
 ## 📊 Progress Tracking
 
-### Overall Progress: 5/15 tasks completed (33%)
+### Overall Progress: 7/15 tasks completed (47%)
 
 | Phase | Tasks | Completed | Status |
 |-------|-------|-----------|--------|
 | Phase 1: Page Structure & Navigation | 2 | 2 | ✅ Completed |
 | Phase 2: Muscle Group Selection | 1 | 1 | ✅ Completed |
 | Phase 3: Exercise Search & Selection | 2 | 2 | ✅ Completed |
-| Phase 4: Sets Performance Section | 2 | 0 | ⬜ Not Started |
+| Phase 4: Sets Performance Section | 2 | 2 | ✅ Completed |
 | Phase 5: Form Submission & Feedback | 3 | 0 | ⬜ Not Started |
 | Phase 6: TypeScript Types | 1 | 0 | ⬜ Not Started |
 | Phase 7: Styling & Polish | 2 | 0 | ⬜ Not Started |
@@ -687,19 +700,40 @@ This implementation will teach:
     - Click-outside pattern with cleanup functions
     - Conditional rendering based on multiple states
     - Form integration with lifted state pattern
+- ✅ **Phase 4 Complete**:
+  - **Task 4.1**: Create SetRow Component
+    - Created `webapp/src/components/add-exercise/SetRow.tsx`
+    - Added `TrashIcon` to `webapp/src/components/ui/icons.tsx`
+    - Grid layout with specific column widths: `grid-cols-[50px_1fr_1fr_44px]`
+    - Controlled inputs with `value || ""` pattern for better UX
+    - Number inputs with validation (min="0", step="0.5" for weight)
+  - **Task 4.2**: Create SetsManager Component
+    - Created `webapp/src/components/add-exercise/SetsManager.tsx`
+    - Added `WorkoutSet` type to `webapp/src/types/index.ts`
+    - Integrated with AddExerciseForm using lifted state pattern
+    - Array immutability with spread operator for adding items
+    - Renumbering logic after deletion to keep set numbers sequential
+    - "Copy Previous" button disabled when no sets exist
+  - **Key Learnings**:
+    - Array state management with immutability
+    - Dynamic form arrays (add, delete, renumber)
+    - Grid layout alignment across components
+    - Props-based state management (lifted state)
+    - Accessibility with aria-labels for icon buttons
 
 ---
 
 ## 🚀 Next Steps
 
-**Current Task**: Phase 4 - Sets Performance Section
+**Current Task**: Phase 5 - Form Submission & Feedback
 
 **To Continue**:
 1. Read this document to understand context
-2. Start with Task 4.1: Create SetRow component
-3. Then Task 4.2: Create SetsManager component
-4. Update task status as you work (⬜ → 🟡 → ✅)
-5. Update the Change Log when completing phases
+2. Start with Task 5.1: Create Form Submit Logic
+3. Then Task 5.2: Add Loading State
+4. Then Task 5.3: Add Success/Error Feedback
+5. Update task status as you work (⬜ → 🟡 → ✅)
+6. Update the Change Log when completing phases
 
 **Quick Start Command**:
 ```bash
