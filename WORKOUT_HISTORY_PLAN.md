@@ -20,161 +20,59 @@ Enhanced the existing `/api/v1/workouts/sessions` endpoint to support optional t
 - Pagination (limit, offset)
 - All parameters are optional - works with or without search query
 
-### Implementation Details
+### Key Changes Made
 
-**File to modify:** `api/src/main.ts`
-
-**Add after the `/search/exercises` endpoint (around line 498):**
-
+**1. Added `q` parameter to schema (line 291):**
 ```typescript
-router.get(`${apiPrefix}/search/sessions`, async (ctx) => {
-  const startTime = Date.now();
-  try {
-    const SearchSessionsQuerySchema = z.object({
-      q: z.string().min(1, "Search query is required"),
-      limit: z.string().transform(Number).pipe(
-        z.number().int().nonnegative().max(100),
-      ).optional().default(20),
-      offset: z.string().transform(Number).pipe(
-        z.number().int().nonnegative(),
-      ).optional().default(0),
-    });
-
-    const { url } = ctx.request;
-    const queryParams = {
-      q: url.searchParams.get("q") || "",
-      limit: url.searchParams.get("limit") || undefined,
-      offset: url.searchParams.get("offset") || undefined,
-    };
-
-    const validatedParams = SearchSessionsQuerySchema.parse(queryParams);
-    const { q, limit, offset } = validatedParams;
-
-    const { user, supabase } = ctx.state;
-
-    // Search sessions by exercise names or muscle groups
-    const { data: sessions, error } = await supabase
-      .from("workout_session")
-      .select(`
-        id,
-        workout_date,
-        created_at,
-        workout_session_exercise (
-          id,
-          exercise_definition_id,
-          workout_exercise_definition (
-            name,
-            muscle_group
-          ),
-          workout_set (
-            id,
-            reps,
-            weight_kg
-          )
-        )
-      `)
-      .eq("user_id", user.id)
-      .is("deleted_at", null)
-      .order("workout_date", { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) {
-      throw error;
-    }
-
-    // Filter sessions that match the search query
-    const filteredSessions = sessions.filter((session: any) => {
-      const exercises = session.workout_session_exercise || [];
-      return exercises.some((ex: any) => {
-        const name = ex.workout_exercise_definition?.name || "";
-        const muscleGroup = ex.workout_exercise_definition?.muscle_group || "";
-        const searchLower = q.toLowerCase();
-        return (
-          name.toLowerCase().includes(searchLower) ||
-          muscleGroup.toLowerCase().includes(searchLower)
-        );
-      });
-    });
-
-    // Transform to match existing sessions format
-    const sessionsExtendedData = filteredSessions.map(
-      (session: Record<string, any>) => {
-        const exercises = session.workout_session_exercise || [];
-        const allSets = exercises.flatMap((ex: Record<string, any>) =>
-          ex.workout_set || []
-        );
-        const muscleGroups = [
-          ...new Set(
-            exercises
-              .map((ex: Record<string, any>) =>
-                ex.workout_exercise_definition?.muscle_group
-              )
-              .filter(Boolean),
-          ),
-        ];
-
-        return {
-          id: session.id,
-          workout_date: session.workout_date,
-          created_at: session.created_at,
-          exercise_count: exercises.length,
-          total_sets: allSets.length,
-          total_volume_kg: allSets.reduce(
-            (sum: any, set: any) => sum + (set.reps * set.weight_kg),
-            0,
-          ),
-          muscle_groups: muscleGroups.join(", "),
-        };
-      },
-    );
-
-    console.log(
-      `[GET /search/sessions] Searched sessions for user ${user.id}`,
-      { query: q, results: sessionsExtendedData.length, duration: Date.now() - startTime },
-    );
-
-    ctx.response.status = Status.OK;
-    ctx.response.body = returnSuccessResponseBody({
-      sessions: sessionsExtendedData,
-      pagination: { limit, offset, count: sessionsExtendedData.length },
-    });
-  } catch (error) {
-    console.error(`[GET /search/sessions] Error:`, {
-      error: (error as Error).message,
-      stack: (error as Error).stack,
-      userId: ctx.state.user?.id,
-      duration: Date.now() - startTime,
-    });
-
-    const errorMessage = (error as Error).message || "Internal server error";
-
-    if (error instanceof z.ZodError) {
-      ctx.response.status = Status.BadRequest;
-      ctx.response.body = returnErrorResponseBody(
-        `Validation error: ${errorMessage}`,
-      );
-    } else {
-      ctx.response.status = Status.InternalServerError;
-      ctx.response.body = returnErrorResponseBody(errorMessage);
-    }
-  }
-});
+q: z.string().optional(),  // Optional text search
 ```
 
-### Key Concepts to Learn
+**2. Added exercise name to query (line 328):**
+```typescript
+workout_exercise_definition (
+  name,           // ← Added for search
+  muscle_group
+)
+```
+
+**3. Added text filtering logic (lines 357-372):**
+```typescript
+// Apply text search filter if query provided
+let filteredSessions = sessions;
+if (q && q.trim()) {
+  filteredSessions = sessions.filter((session: any) => {
+    const exercises = session.workout_session_exercise || [];
+    return exercises.some((ex: any) => {
+      const name = ex.workout_exercise_definition?.name || "";
+      const muscleGroup = ex.workout_exercise_definition?.muscle_group || "";
+      const searchLower = q.toLowerCase();
+      return (
+        name.toLowerCase().includes(searchLower) ||
+        muscleGroup.toLowerCase().includes(searchLower)
+      );
+    });
+  });
+}
+```
+
+### Key Concepts Learned
+- **Optional Parameters:** Making search optional while maintaining backward compatibility
 - **Text Search:** Using filter and includes for basic text matching
 - **Nested Queries:** Fetching related data with Supabase's select syntax
-- **Pagination:** Implementing limit/offset for large datasets
 - **Data Transformation:** Converting database format to API response format
 
 ### Testing
 ```bash
-# Start the API server
-cd api
-deno task dev
+# Get all sessions
+curl "http://localhost:8000/api/v1/workouts/sessions" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 
-# Test the endpoint with curl
-curl "http://localhost:8000/api/v1/search/sessions?q=bench" \
+# Search sessions
+curl "http://localhost:8000/api/v1/workouts/sessions?q=bench" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Search with date filter
+curl "http://localhost:8000/api/v1/workouts/sessions?q=chest&start_date=2025-01-01" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -315,13 +213,19 @@ await api.getWorkoutSessions({
 
 ---
 
-## Task 4: Create Filter Icon Component
+## Task 4: Create Filter Icon Component ✅ COMPLETED
 
 ### Learning Goal
 Learn how to create reusable SVG icon components.
 
 ### What You'll Build
-A filter icon that matches the design system.
+Three icon components needed for the workout history screen: FilterIcon, SearchIcon, and XIcon.
+
+### Status
+✅ **Completed** - Added three icon components to `webapp/src/components/ui/icons.tsx:198-268`:
+- `FilterIcon` - For the filter button (three horizontal lines)
+- `SearchIcon` - For the search input (magnifying glass)
+- `XIcon` - For close buttons and clear actions (X mark)
 
 **File to modify:** `webapp/src/components/ui/icons.tsx`
 
@@ -408,13 +312,21 @@ export function XIcon({ size = 24, className = "" }: IconProps) {
 
 ---
 
-## Task 5: Create Filter Modal Component
+## Task 5: Create Filter Modal Component ✅ COMPLETED
 
 ### Learning Goal
 Learn how to create modal dialogs with form inputs and state management.
 
 ### What You'll Build
 A modal that allows users to filter sessions by date range and muscle group.
+
+### Status
+✅ **Completed** - Created `webapp/src/components/workout-history/FilterModal.tsx` with:
+- Modal overlay pattern with backdrop
+- Three filter inputs (start date, end date, muscle group)
+- Apply and Clear All actions
+- State management with React hooks
+- Conditional rendering (only renders when open)
 
 **Create new file:** `webapp/src/components/workout-history/FilterModal.tsx`
 

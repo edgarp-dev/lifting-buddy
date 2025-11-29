@@ -194,3 +194,75 @@ export function TrashIcon({ size = 24, className = "" }: IconProps) {
 		</svg>
 	);
 }
+
+export function FilterIcon({ size = 24, className = "" }: IconProps) {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			className={className}
+			aria-hidden="true"
+		>
+			<path
+				d="M4 6H20M7 12H17M10 18H14"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
+
+export function SearchIcon({ size = 24, className = "" }: IconProps) {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			className={className}
+			aria-hidden="true"
+		>
+			<circle
+				cx="11"
+				cy="11"
+				r="8"
+				stroke="currentColor"
+				strokeWidth="2"
+			/>
+			<path
+				d="M21 21L16.65 16.65"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+			/>
+		</svg>
+	);
+}
+
+export function XIcon({ size = 24, className = "" }: IconProps) {
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox="0 0 24 24"
+			fill="none"
+			xmlns="http://www.w3.org/2000/svg"
+			className={className}
+			aria-hidden="true"
+		>
+			<path
+				d="M18 6L6 18M6 6L18 18"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	);
+}
