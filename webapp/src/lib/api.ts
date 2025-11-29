@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/client";
-import { ApiResponse, ExerciseDefinition, WeeklySession } from "@/types";
+import {
+	ApiResponse,
+	ExerciseDefinition,
+	WeeklySession,
+	WorkoutSet,
+} from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
 	token?: string;
@@ -33,6 +38,19 @@ class ApiClient {
 			{
 				method: "POST",
 				body: JSON.stringify({ name, muscle_group: muscleGroup }),
+			}
+		);
+	}
+
+	async logWorkoutExercise(exerciseDefinitionId: string, sets: WorkoutSet[]) {
+		return this.request<ApiResponse<{ id: string }>>(
+			"/api/v1/workouts/exercise",
+			{
+				method: "POST",
+				body: JSON.stringify({
+					exercise_definition_id: exerciseDefinitionId,
+					sets,
+				}),
 			}
 		);
 	}

@@ -1,8 +1,8 @@
 # Add Exercise Screen - Implementation Plan
 
-**Status**: 🟡 In Progress - Phase 5
-**Last Updated**: 2025-11-24
-**Current Phase**: Phase 5 - Form Submission & Feedback
+**Status**: 🟡 In Progress - Phase 6
+**Last Updated**: 2025-11-29
+**Current Phase**: Phase 6 - TypeScript Types & Validation
 
 ---
 
@@ -376,78 +376,54 @@ POST /api/v1/workouts/exercise
 
 ---
 
-### **Phase 5: Form Submission & Feedback** ⬜ Not Started
+### **Phase 5: Form Submission & Feedback** ✅ Complete
 
-#### Task 5.1: Create Form Submit Logic ⬜
-- **File**: Main form in `webapp/src/components/dashboard/AddExerciseForm.tsx`
+#### Task 5.1: Create Form Submit Logic ✅
+- **File**: `webapp/src/components/add-exercise/AddExerciseForm.tsx`
 - **What to learn**:
   - Form validation before submission
   - Composing data from multiple child components
   - API POST requests with complex data
-- **Implementation Steps**:
-  1. Collect state from all child components (muscle group, exercise, sets)
-  2. Validate: exercise selected, at least 1 set, all set data filled
-  3. Format data to match API schema
-  4. Call `apiClient.post('/workouts/exercise', payload)`
-  5. Handle response
+- **Implementation**:
+  - Added `logWorkoutExercise` method to API client
+  - Created `validateForm()` function with comprehensive checks
+  - Added `handleSubmit()` async function with try/catch/finally
+  - Validation checks: exercise selected, at least 1 set, valid reps/weight
 - **Validation Rules**:
   - Exercise definition must be selected
   - At least 1 set required
   - All sets must have valid reps and weight (positive numbers)
-  - Set numbers must be unique
-- **API Payload Format**:
-  ```typescript
-  {
-    exercise_definition_id: string,
-    sets: [
-      { set: 1, reps: 10, weight_kg: 60.5 },
-      { set: 2, reps: 8, weight_kg: 65 }
-    ]
-  }
-  ```
-- **Status**: ⬜ Not Started
+- **Status**: ✅ Complete
 
-#### Task 5.2: Add Loading State ⬜
+#### Task 5.2: Add Loading State ✅
 - **What to learn**:
   - Managing loading states across components
   - Disabling UI during async operations
-- **Implementation Steps**:
-  1. Add state: `const [isLoading, setIsLoading] = useState(false)`
-  2. Set `isLoading = true` before API call
-  3. Set `isLoading = false` after API call (success or error)
-  4. Pass `isLoading` to Button component (`isLoading` prop already exists)
-  5. Pass `disabled={isLoading}` to all input components
-  6. Pass `disabled={isLoading}` to back button in header
-- **Design Specs**:
-  - Button shows spinner when loading (built into Button component)
-  - All inputs grayed out when disabled
-  - Back button not clickable when disabled
-- **Status**: ⬜ Not Started
+- **Implementation**:
+  - Added `isLoading` state variable
+  - Set to `true` before API call, `false` in finally block
+  - Passed `isLoading` to Button component for spinner
+  - Passed `disabled={isLoading}` to all input components (MuscleGroupSelector, ExerciseNameInput, SetsManager)
+  - Button component handles loading spinner automatically
+- **UX Enhancement**:
+  - ExerciseNameInput also disabled when no muscle group selected: `disabled={isLoading || !selectedMuscleGroup}`
+- **Status**: ✅ Complete
 
-#### Task 5.3: Add Success/Error Feedback ⬜
+#### Task 5.3: Add Success/Error Feedback ✅
 - **What to learn**:
   - User feedback patterns
-  - Toast notifications or inline messages
+  - Error handling and display
   - Navigation after success
-- **Implementation Steps**:
-  1. Create state for feedback: `const [feedback, setFeedback] = useState<{type: 'success' | 'error', message: string} | null>(null)`
-  2. On success:
-     - Show success message: "Exercise logged successfully!"
-     - Wait 1.5 seconds
-     - Redirect to `/dashboard` using `router.push()`
-  3. On error:
-     - Extract error message from API response
-     - Show error message: "Failed to log exercise: {error}"
-     - Don't clear form data (let user fix and retry)
-  4. Display feedback message at top or bottom of form
-  5. Auto-dismiss success after redirect
-- **Design Specs**:
-  - Success: Green background (`--accent-success`), white text
-  - Error: Red background (`--accent-error`), white text
-  - Padding, rounded corners, slide-in animation
-  - Position: Fixed at top or bottom
-- **Optional Enhancement**: Use a toast library like `react-hot-toast` or `sonner`
-- **Status**: ⬜ Not Started
+- **Implementation**:
+  - Added `errorMessage` state variable
+  - Clear error message at start of submission
+  - Display error in red banner if validation or API call fails
+  - Redirect to `/dashboard` immediately on success using `useRouter`
+- **Design**:
+  - Error: Red background (`--accent-error`), white text, rounded corners
+  - Immediate redirect on success (no delay needed)
+  - Form data preserved on error for user to fix
+- **Status**: ✅ Complete
 
 ---
 
@@ -634,7 +610,7 @@ This implementation will teach:
 
 ## 📊 Progress Tracking
 
-### Overall Progress: 7/15 tasks completed (47%)
+### Overall Progress: 10/15 tasks completed (67%)
 
 | Phase | Tasks | Completed | Status |
 |-------|-------|-----------|--------|
@@ -642,7 +618,7 @@ This implementation will teach:
 | Phase 2: Muscle Group Selection | 1 | 1 | ✅ Completed |
 | Phase 3: Exercise Search & Selection | 2 | 2 | ✅ Completed |
 | Phase 4: Sets Performance Section | 2 | 2 | ✅ Completed |
-| Phase 5: Form Submission & Feedback | 3 | 0 | ⬜ Not Started |
+| Phase 5: Form Submission & Feedback | 3 | 3 | ✅ Completed |
 | Phase 6: TypeScript Types | 1 | 0 | ⬜ Not Started |
 | Phase 7: Styling & Polish | 2 | 0 | ⬜ Not Started |
 | Phase 8: Testing & Documentation | 2 | 0 | ⬜ Not Started |
@@ -721,17 +697,42 @@ This implementation will teach:
     - Props-based state management (lifted state)
     - Accessibility with aria-labels for icon buttons
 
+### 2025-11-29 - Session 4
+- ✅ **Phase 5 Complete**:
+  - **Task 5.1**: Create Form Submit Logic
+    - Added `logWorkoutExercise` method to `webapp/src/lib/api.ts`
+    - Imported `WorkoutSet` type in API client
+    - Created `validateForm()` function with comprehensive validation
+    - Multi-step validation: exercise selected, at least 1 set, valid reps/weight
+    - Specific error messages for each validation failure
+  - **Task 5.2**: Add Loading State
+    - Added `isLoading` state variable
+    - Disabled all inputs during submission (MuscleGroupSelector, ExerciseNameInput, SetsManager)
+    - Button shows loading spinner automatically
+    - UX enhancement: ExerciseNameInput also disabled when no muscle group selected
+  - **Task 5.3**: Add Success/Error Feedback
+    - Added `errorMessage` state variable
+    - Red error banner displays validation/API errors
+    - Immediate redirect to dashboard on success using `useRouter` from `next/navigation`
+    - Form data preserved on error for user to fix and retry
+  - **Key Learnings**:
+    - Form validation patterns with early returns
+    - try/catch/finally for proper error handling
+    - Loading state management across multiple components
+    - Client-side navigation with Next.js 15 App Router
+    - Error extraction and user-friendly error messages
+
 ---
 
 ## 🚀 Next Steps
 
-**Current Task**: Phase 5 - Form Submission & Feedback
+**Current Task**: Phase 6 - TypeScript Types & Validation
 
 **To Continue**:
 1. Read this document to understand context
-2. Start with Task 5.1: Create Form Submit Logic
-3. Then Task 5.2: Add Loading State
-4. Then Task 5.3: Add Success/Error Feedback
+2. Phase 6 is mostly complete (WorkoutSet already added)
+3. Consider moving to Phase 7: Styling & Polish
+4. Or Phase 8: Testing & Documentation
 5. Update task status as you work (⬜ → 🟡 → ✅)
 6. Update the Change Log when completing phases
 
