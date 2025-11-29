@@ -36,33 +36,30 @@ export function HistorySessionCard({ session, onClick }: HistorySessionCardProps
                 hover:border-[var(--border-default)]
             "
         >
-            <div className="flex flex-col gap-2 flex-1">
-                {/* Date */}
-                <div className="flex items-center gap-2">
-                    <CalendarIcon
-                        size={16}
-                        className="text-[var(--accent-primary)]"
-                    />
-                    <span className="text-[var(--text-primary)] font-medium text-base">
-                        {formatDate(session.workout_date)}
-                    </span>
-                </div>
+            <div className="flex items-center gap-3 flex-1">
+                <div className="flex flex-col gap-1">
+                    {/* Muscle Groups */}
+                    <div className="flex items-center gap-2">
+                        <DumbbellIcon
+                            size={20}
+                            className="text-[var(--accent-primary)]"
+                        />
+                        <span className="text-[var(--text-primary)] font-medium text-base">
+                            {muscleGroups}
+                        </span>
+                    </div>
 
-                {/* Muscle Groups */}
-                <div className="flex items-center gap-2">
-                    <DumbbellIcon
-                        size={16}
-                        className="text-[var(--text-secondary)]"
-                    />
-                    <span className="text-[var(--text-secondary)] text-sm">
-                        {muscleGroups}
-                    </span>
+                    {/* Date */}
+                    <div className="flex items-center gap-2 mt-2">
+                        <CalendarIcon
+                            size={14}
+                            className="text-[var(--text-secondary)]"
+                        />
+                        <span className="text-[var(--text-secondary)] text-sm">
+                            {formatDate(session.workout_date)}
+                        </span>
+                    </div>
                 </div>
-
-                {/* Stats */}
-                <span className="text-[var(--text-tertiary)] text-xs">
-                    {stats}
-                </span>
             </div>
 
             <ChevronRightIcon

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/ui/Header";
+import { WorkoutHistoryHeader } from "@/components/workout-history/WorkoutHistoryHeader";
 import { FilterIcon } from "@/components/ui/icons";
 import { SearchBar } from "@/components/workout-history/SearchBar";
 import { FilterModal } from "@/components/workout-history/FilterModal";
@@ -66,14 +66,9 @@ export default function WorkoutHistoryPage() {
 
     return (
         <div className="min-h-screen bg-[var(--background-primary)] flex flex-col">
-            <Header />
+            <WorkoutHistoryHeader />
 
             <main className="container mx-auto px-4 py-6 max-w-2xl flex-1">
-                {/* Page Title */}
-                <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-6">
-                    Workout History
-                </h1>
-
                 {/* Search and Filter */}
                 <div className="flex gap-3 mb-6">
                     <div className="flex-1">

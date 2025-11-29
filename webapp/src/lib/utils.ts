@@ -5,5 +5,6 @@ export function formatWorkoutDate(date: string): string {
         weekday: "short",
         day: "numeric",
         month: "short",
+        year: "numeric",
     });
 }
