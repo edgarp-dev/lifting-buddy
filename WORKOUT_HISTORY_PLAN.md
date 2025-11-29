@@ -5,13 +5,20 @@ This plan outlines the steps to build a complete workout history screen that dis
 
 ---
 
-## Task 1: Add Session Search API Endpoint
+## Task 1: Enhance Sessions Endpoint with Search ✅ COMPLETED
 
 ### Learning Goal
 Understand how to create search functionality using Supabase's text search capabilities and how to structure API endpoints for filtering data.
 
 ### What You'll Build
-A new API endpoint `/api/v1/search/sessions` that allows searching workout sessions by exercise names, muscle groups, and dates.
+Enhanced the existing `/api/v1/workouts/sessions` endpoint to support optional text search along with date filtering.
+
+### Status
+✅ **Completed** - Endpoint enhanced at `api/src/main.ts:287-429` with support for:
+- **Optional text search** (`q` parameter) by exercise name and muscle group
+- Date range filtering (start_date, end_date)
+- Pagination (limit, offset)
+- All parameters are optional - works with or without search query
 
 ### Implementation Details
 
@@ -173,13 +180,19 @@ curl "http://localhost:8000/api/v1/search/sessions?q=bench" \
 
 ---
 
-## Task 2: Create TypeScript Types for Workout History
+## Task 2: Create TypeScript Types for Workout History ✅ COMPLETED
 
 ### Learning Goal
 Understand how to define TypeScript interfaces that match API responses and component props.
 
 ### What You'll Build
 Type definitions for workout sessions with extended metadata.
+
+### Status
+✅ **Completed** - Added three interfaces to `webapp/src/types/index.ts:49-72`:
+- `WorkoutSession` - Single session with aggregate data
+- `WorkoutSessionsResponse` - API response wrapper with pagination
+- `SessionFilters` - Filter options for the modal
 
 **File to modify:** `webapp/src/types/index.ts`
 
@@ -219,26 +232,35 @@ export interface SessionFilters {
 
 ---
 
-## Task 3: Add API Client Methods
+## Task 3: Add API Client Methods ✅ COMPLETED
 
 ### Learning Goal
-Learn how to extend the API client with new methods for fetching and searching sessions.
+Learn how to extend the API client with a unified method for fetching and searching sessions.
 
 ### What You'll Build
-Two new methods in the API client for session data.
+A single, flexible method in the API client that handles both fetching and searching sessions.
+
+### Status
+✅ **Completed** - Added `getWorkoutSessions()` method at `webapp/src/lib/api.ts:59-79` with support for:
+- Optional text search (`q` parameter)
+- Date range filtering
+- Pagination
+- All-in-one method - no separate search method needed
 
 **File to modify:** `webapp/src/lib/api.ts`
 
-**Add these methods to the `ApiClient` class:**
+**Add this method to the `ApiClient` class:**
 
 ```typescript
 async getWorkoutSessions(params?: {
+    q?: string;              // Optional text search
     start_date?: string;
     end_date?: string;
     limit?: number;
     offset?: number;
 }) {
     const queryParams = new URLSearchParams();
+    if (params?.q) queryParams.set("q", params.q);
     if (params?.start_date) queryParams.set("start_date", params.start_date);
     if (params?.end_date) queryParams.set("end_date", params.end_date);
     if (params?.limit) queryParams.set("limit", params.limit.toString());
@@ -250,15 +272,6 @@ async getWorkoutSessions(params?: {
     return this.request<ApiResponse<WorkoutSessionsResponse>>(endpoint, {
         method: "GET",
     });
-}
-
-async searchWorkoutSessions(query: string, limit = 20, offset = 0) {
-    return this.request<ApiResponse<WorkoutSessionsResponse>>(
-        `/api/v1/search/sessions?q=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}`,
-        {
-            method: "GET",
-        }
-    );
 }
 ```
 
@@ -276,7 +289,29 @@ import {
 ### Key Concepts to Learn
 - **URLSearchParams:** Building query strings safely
 - **Optional Parameters:** Using TypeScript's optional object properties
-- **Method Chaining:** How API client methods work together
+- **Unified API Design:** Single method handles multiple use cases (fetch all, search, filter by date)
+
+### Usage Examples
+```typescript
+// Get all sessions
+await api.getWorkoutSessions();
+
+// Search for "bench press"
+await api.getWorkoutSessions({ q: "bench press" });
+
+// Filter by date range
+await api.getWorkoutSessions({
+    start_date: "2025-01-01",
+    end_date: "2025-01-31"
+});
+
+// Search with date filter
+await api.getWorkoutSessions({
+    q: "chest",
+    start_date: "2025-01-01",
+    limit: 50
+});
+```
 
 ---
 

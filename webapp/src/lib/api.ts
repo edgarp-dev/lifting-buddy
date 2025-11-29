@@ -4,6 +4,7 @@ import {
 	ExerciseDefinition,
 	WeeklySession,
 	WorkoutSet,
+	WorkoutSessionsResponse,
 } from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
@@ -53,6 +54,28 @@ class ApiClient {
 				}),
 			}
 		);
+	}
+
+	async getWorkoutSessions(params?: {
+		q?: string;
+		start_date?: string;
+		end_date?: string;
+		limit?: number;
+		offset?: number;
+	}) {
+		const queryParams = new URLSearchParams();
+		if (params?.q) queryParams.set("q", params.q);
+		if (params?.start_date) queryParams.set("start_date", params.start_date);
+		if (params?.end_date) queryParams.set("end_date", params.end_date);
+		if (params?.limit) queryParams.set("limit", params.limit.toString());
+		if (params?.offset) queryParams.set("offset", params.offset.toString());
+
+		const query = queryParams.toString();
+		const endpoint = `/api/v1/workouts/sessions${query ? `?${query}` : ""}`;
+
+		return this.request<ApiResponse<WorkoutSessionsResponse>>(endpoint, {
+			method: "GET",
+		});
 	}
 
 	private async request<T>(
