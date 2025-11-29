@@ -12,7 +12,7 @@ export function WeeklySessionsList() {
         return (
             <section className="mb-8">
                 <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-                    This Week's Completed Sessions
+                    This Week&apos;s Completed Sessions
                 </h2>
                 <LoadingSkeleton />
             </section>
@@ -23,7 +23,7 @@ export function WeeklySessionsList() {
         return (
             <section className="mb-8">
                 <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-                    This Week's Completed Sessions
+                    This Week&apos;s Completed Sessions
                 </h2>
                 <ErrorMessage
                     message={error?.message || "Failed to load workouts"}
@@ -37,7 +37,7 @@ export function WeeklySessionsList() {
         return (
             <section className="mb-8">
                 <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-                    This Week's Completed Sessions
+                    This Week&apos;s Completed Sessions
                 </h2>
                 <EmptyState />
             </section>
@@ -47,7 +47,7 @@ export function WeeklySessionsList() {
     return (
         <section className="mb-8">
             <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4">
-                This Week's Completed Sessions
+                This Week&apos;s Completed Sessions
             </h2>
             <div className="space-y-3">
                 {response.data?.map((session) => (
