@@ -15,8 +15,7 @@ export function DashboardActions() {
 	};
 
 	const handleViewHistory = () => {
-		// TODO: Implement view history logic
-		alert("View History clicked!");
+		router.push("/workout-history");
 	};
 
 	return (
