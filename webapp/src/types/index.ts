@@ -45,3 +45,28 @@ export interface WorkoutSet {
     reps: number;
     weight_kg: number;
 }
+
+export interface WorkoutSession {
+    id: string;
+    workout_date: string;
+    created_at: string;
+    exercise_count: number;
+    total_sets: number;
+    total_volume_kg: number;
+    muscle_groups: string;
+}
+
+export interface WorkoutSessionsResponse {
+    sessions: WorkoutSession[];
+    pagination: {
+        limit: number;
+        offset: number;
+        count: number;
+    };
+}
+
+export interface SessionFilters {
+    startDate?: string;
+    endDate?: string;
+    muscleGroup?: string;
+}
