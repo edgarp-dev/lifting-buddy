@@ -497,6 +497,155 @@ router.get(`${apiPrefix}/search/exercises`, async (ctx) => {
   }
 });
 
+router.get(`${apiPrefix}/search/sessions`, async (ctx) => {
+  const startTime = Date.now();
+  try {
+    const SearchSessionsQuerySchema = z.object({
+      q: z.string().min(1, "Search query is required"),
+      start_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      end_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      limit: z.string().transform(Number).pipe(
+        z.number().int().nonnegative().max(100),
+      ).optional().default(20),
+      offset: z.string().transform(Number).pipe(
+        z.number().int().nonnegative(),
+      ).optional().default(0),
+    });
+
+    const { url } = ctx.request;
+    const queryParams = {
+      q: url.searchParams.get("q") || "",
+      start_date: url.searchParams.get("start_date") || undefined,
+      end_date: url.searchParams.get("end_date") || undefined,
+      limit: url.searchParams.get("limit") || undefined,
+      offset: url.searchParams.get("offset") || undefined,
+    };
+
+    const validatedParams = SearchSessionsQuerySchema.parse(queryParams);
+    const { q, start_date, end_date, limit, offset } = validatedParams;
+
+    const { user, supabase } = ctx.state;
+
+    const query = supabase
+      .from("workout_session")
+      .select(`
+        id,
+        workout_date,
+        created_at,
+        workout_session_exercise (
+          id,
+          exercise_definition_id,
+          workout_exercise_definition (
+            name,
+            muscle_group
+          ),
+          workout_set (
+            id,
+            reps,
+            weight_kg
+          )
+        )
+      `)
+      .eq("user_id", user.id)
+      .is("deleted_at", null)
+      .order("workout_date", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (start_date) {
+      query.gte("workout_date", start_date);
+    }
+    if (end_date) {
+      query.lte("workout_date", end_date);
+    }
+
+    const { data: sessions, error } = await query;
+
+    if (error) {
+      throw error;
+    }
+
+    const filteredSessions = sessions.filter((session: any) => {
+      const exercises = session.workout_session_exercise || [];
+      return exercises.some((ex: any) => {
+        const name = ex.workout_exercise_definition?.name || "";
+        const muscleGroup = ex.workout_exercise_definition?.muscle_group || "";
+        const searchLower = q.toLowerCase();
+        return (
+          name.toLowerCase().includes(searchLower) ||
+          muscleGroup.toLowerCase().includes(searchLower)
+        );
+      });
+    });
+
+    const sessionsExtendedData = filteredSessions.map(
+      (session: Record<string, any>) => {
+        const exercises = session.workout_session_exercise || [];
+        const allSets = exercises.flatMap((ex: Record<string, any>) =>
+          ex.workout_set || []
+        );
+        const muscleGroups = [
+          ...new Set(
+            exercises
+              .map((ex: Record<string, any>) =>
+                ex.workout_exercise_definition?.muscle_group
+              )
+              .filter(Boolean),
+          ),
+        ];
+
+        return {
+          id: session.id,
+          workout_date: session.workout_date,
+          created_at: session.created_at,
+          exercise_count: exercises.length,
+          total_sets: allSets.length,
+          total_volume_kg: allSets.reduce(
+            (sum: any, set: any) => sum + (set.reps * set.weight_kg),
+            0,
+          ),
+          muscle_groups: muscleGroups.join(", "),
+        };
+      },
+    );
+
+    console.log(
+      `[GET /search/sessions] Searched sessions for user ${user.id}`,
+      {
+        query: q,
+        start_date,
+        end_date,
+        results: sessionsExtendedData.length,
+        duration: Date.now() - startTime
+      },
+    );
+
+    ctx.response.status = Status.OK;
+    ctx.response.body = returnSuccessResponseBody({
+      sessions: sessionsExtendedData,
+      pagination: { limit, offset, count: sessionsExtendedData.length },
+    });
+  } catch (error) {
+    console.error(`[GET /search/sessions] Error:`, {
+      error: (error as Error).message,
+      stack: (error as Error).stack,
+      userId: ctx.state.user?.id,
+      duration: Date.now() - startTime,
+    });
+
+    const errorMessage = (error as Error).message || "Internal server error";
+
+    if (error instanceof z.ZodError) {
+      ctx.response.status = Status.BadRequest;
+      ctx.response.body = returnErrorResponseBody(
+        `Validation error: ${errorMessage}`,
+      );
+    } else {
+      ctx.response.status = Status.InternalServerError;
+      ctx.response.body = returnErrorResponseBody(errorMessage);
+    }
+  }
+});
+
 router.get(`${apiPrefix}/workouts/sessions/:session_id`, async (ctx) => {
   try {
     const SessionIdParamsSchema = z.object({
