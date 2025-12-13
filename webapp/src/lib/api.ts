@@ -5,6 +5,7 @@ import {
 	WeeklySession,
 	WorkoutSet,
 	WorkoutSessionsResponse,
+	WorkoutSessionDetail
 } from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
@@ -76,6 +77,15 @@ class ApiClient {
 		return this.request<ApiResponse<WorkoutSessionsResponse>>(endpoint, {
 			method: "GET",
 		});
+	}
+
+	async getWorkoutSessionDetail(sessionId: string) {
+		return this.request<ApiResponse<WorkoutSessionDetail>>(
+			`/api/v1/workouts/sessions/${sessionId}`,
+			{
+				method: "GET",
+			}
+		);
 	}
 
 	private async request<T>(

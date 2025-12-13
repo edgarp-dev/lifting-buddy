@@ -70,3 +70,26 @@ export interface SessionFilters {
     endDate?: string;
     muscleGroup?: string;
 }
+
+export interface WorkoutSetDetail {
+    id: string;
+    set_number: number;
+    reps: number;
+    weight_kg: number;
+}
+
+export interface WorkoutExerciseDetail {
+    id: string;
+    exercise_definition_id: string;
+    name: string;
+    muscle_group: string;
+    order: number;
+    sets: WorkoutSetDetail[];
+}
+
+export interface WorkoutSessionDetail {
+    id: string;
+    workout_date: string;
+    created_at: string;
+    exercises: WorkoutExerciseDetail[];
+}
