@@ -138,7 +138,7 @@ export function useWorkoutSessionDetail(sessionId: string) {
 
 ---
 
-### Step 4: Add ChevronDown Icon
+### ✅ Step 4: Add ChevronDown Icon (COMPLETED)
 **File**: [webapp/src/components/ui/icons.tsx](webapp/src/components/ui/icons.tsx)
 
 Add to exports:
@@ -169,7 +169,7 @@ export function ChevronDownIcon({ className }: { className?: string }) {
 
 ---
 
-### Step 5: Create ExerciseSetRow Component
+### ✅ Step 5: Create ExerciseSetRow Component (COMPLETED)
 **File**: [webapp/src/components/workout-session/ExerciseSetRow.tsx](webapp/src/components/workout-session/ExerciseSetRow.tsx) (NEW FILE)
 
 ```typescript
@@ -205,7 +205,7 @@ export function ExerciseSetRow({ set }: ExerciseSetRowProps) {
 
 ---
 
-### Step 6: Create ExerciseDetailCard Component
+### ✅ Step 6: Create ExerciseDetailCard Component (COMPLETED)
 **File**: [webapp/src/components/workout-session/ExerciseDetailCard.tsx](webapp/src/components/workout-session/ExerciseDetailCard.tsx) (NEW FILE)
 
 ```typescript
@@ -279,14 +279,14 @@ export function ExerciseDetailCard({ exercise }: ExerciseDetailCardProps) {
 
 ---
 
-### Step 7: Create SessionDetailHeader Component
+### ✅ Step 7: Create SessionDetailHeader Component (COMPLETED)
 **File**: [webapp/src/components/workout-session/SessionDetailHeader.tsx](webapp/src/components/workout-session/SessionDetailHeader.tsx) (NEW FILE)
 
 ```typescript
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChevronLeftIcon } from "@/components/ui/icons";
+import { ArrowLeftIcon } from "@/components/ui/icons";
 
 interface SessionDetailHeaderProps {
     date: string;
@@ -310,7 +310,7 @@ export function SessionDetailHeader({ date }: SessionDetailHeaderProps) {
                     className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
                     aria-label="Go back"
                 >
-                    <ChevronLeftIcon className="w-6 h-6" />
+                    <ArrowLeftIcon size={24} className="" />
                 </button>
                 <div>
                     <h1 className="text-xl font-bold text-[var(--text-primary)]">
@@ -333,7 +333,7 @@ export function SessionDetailHeader({ date }: SessionDetailHeaderProps) {
 
 ---
 
-### Step 8: Create Main Page Component
+### ✅ Step 8: Create Main Page Component (COMPLETED)
 **File**: [webapp/src/app/workout-session/[id]/page.tsx](webapp/src/app/workout-session/[id]/page.tsx) (NEW FILE)
 
 ```typescript
@@ -415,7 +415,7 @@ export default function WorkoutSessionPage() {
 
 ---
 
-### Step 9: Update Dashboard Navigation
+### ✅ Step 9: Update Dashboard Navigation (COMPLETED)
 **File**: [webapp/src/components/dashboard/WeeklySessionsList.tsx](webapp/src/components/dashboard/WeeklySessionsList.tsx)
 
 Replace the onClick handler (around line 20-22):

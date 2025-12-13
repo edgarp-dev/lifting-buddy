@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from "next/navigation";
 import { useWeeklySummary } from "@/hooks/useWeeklySummary";
 import { WorkoutSessionCard } from "./WorkoutSessionCard";
 import { LoadingSkeleton } from "./LoadingSkeleton";
@@ -6,6 +7,7 @@ import { ErrorMessage } from "./ErrorMessage";
 import { EmptyState } from "./EmptyState";
 
 export function WeeklySessionsList() {
+    const router = useRouter();
     const { data: response, isLoading, isError, error, refetch } = useWeeklySummary();
 
     if (isLoading) {
@@ -50,17 +52,14 @@ export function WeeklySessionsList() {
                 This Week&apos;s Completed Sessions
             </h2>
             <div className="space-y-3">
-                {response.data?.map((session) => (
+                {response.data?.map(({ session_id, muscle_groups, workout_date }) => (
                     <WorkoutSessionCard
-                        key={session.session_id}
-                        sessionId={session.session_id}
-                        exercises={session.muscle_groups.split(", ")}
-                        date={session.workout_date}
+                        key={session_id}
+                        sessionId={session_id}
+                        exercises={muscle_groups.split(", ")}
+                        date={workout_date}
                         onClick={() => {
-                            console.log(
-                                "Navigate to session:",
-                                session.session_id,
-                            );
+                            router.push(`/workout-session/${session_id}`);
                         }}
                     />
                 ))}

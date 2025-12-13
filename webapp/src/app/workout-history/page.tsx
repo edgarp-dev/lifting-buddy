@@ -17,7 +17,6 @@ export default function WorkoutHistoryPage() {
     const [filters, setFilters] = useState<SessionFilters>({});
     const [showFilterModal, setShowFilterModal] = useState(false);
 
-    // Fetch sessions on mount and when filters or search changes
     useEffect(() => {
         fetchSessions();
     }, [filters, searchQuery]);
@@ -35,7 +34,6 @@ export default function WorkoutHistoryPage() {
             if (response.success && response.data) {
                 let sessionsList = response.data.sessions;
 
-                // Filter by muscle group if specified (client-side filtering)
                 if (filters.muscleGroup) {
                     sessionsList = sessionsList.filter((session) =>
                         session.muscle_groups
@@ -59,7 +57,7 @@ export default function WorkoutHistoryPage() {
 
     const handleApplyFilters = (newFilters: SessionFilters) => {
         setFilters(newFilters);
-        setSearchQuery(""); // Clear search when applying filters
+        setSearchQuery("");
     };
 
     const hasActiveFilters = filters.startDate || filters.endDate || filters.muscleGroup;
@@ -69,7 +67,6 @@ export default function WorkoutHistoryPage() {
             <WorkoutHistoryHeader />
 
             <main className="container mx-auto px-4 py-6 max-w-2xl flex-1">
-                {/* Search and Filter */}
                 <div className="flex gap-3 mb-6">
                     <div className="flex-1">
                         <SearchBar
@@ -91,15 +88,11 @@ export default function WorkoutHistoryPage() {
                         <FilterIcon size={20} />
                     </button>
                 </div>
-
-                {/* Results Count */}
                 <div className="mb-4">
                     <p className="text-sm text-[var(--text-secondary)]">
                         {loading ? "Loading..." : `${sessions.length} workout${sessions.length !== 1 ? "s" : ""} found`}
                     </p>
                 </div>
-
-                {/* Sessions List */}
                 <div className="space-y-3">
                     {sessions.length === 0 && !loading && (
                         <div className="text-center py-12">
@@ -110,7 +103,6 @@ export default function WorkoutHistoryPage() {
                             </p>
                         </div>
                     )}
-
                     {sessions.map((session) => (
                         <HistorySessionCard
                             key={session.id}
@@ -120,8 +112,6 @@ export default function WorkoutHistoryPage() {
                     ))}
                 </div>
             </main>
-
-            {/* Filter Modal */}
             <FilterModal
                 isOpen={showFilterModal}
                 onClose={() => setShowFilterModal(false)}

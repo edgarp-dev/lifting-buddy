@@ -19,7 +19,6 @@ export function HistorySessionCard({ session, onClick }: HistorySessionCardProps
     };
 
     const muscleGroups = session.muscle_groups || "No muscle groups";
-    const stats = `${session.exercise_count} exercises • ${session.total_sets} sets • ${Math.round(session.total_volume_kg)}kg`;
 
     return (
         <div
@@ -38,7 +37,6 @@ export function HistorySessionCard({ session, onClick }: HistorySessionCardProps
         >
             <div className="flex items-center gap-3 flex-1">
                 <div className="flex flex-col gap-1">
-                    {/* Muscle Groups */}
                     <div className="flex items-center gap-2">
                         <DumbbellIcon
                             size={20}
@@ -48,8 +46,6 @@ export function HistorySessionCard({ session, onClick }: HistorySessionCardProps
                             {muscleGroups}
                         </span>
                     </div>
-
-                    {/* Date */}
                     <div className="flex items-center gap-2 mt-2">
                         <CalendarIcon
                             size={14}
@@ -61,7 +57,6 @@ export function HistorySessionCard({ session, onClick }: HistorySessionCardProps
                     </div>
                 </div>
             </div>
-
             <ChevronRightIcon
                 size={20}
                 className="text-[var(--text-secondary)] flex-shrink-0"
