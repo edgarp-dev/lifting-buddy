@@ -10,8 +10,7 @@ export function DashboardActions() {
 	};
 
 	const handleOpenAIChat = () => {
-		// TODO: Implement AI chat interface
-		alert("Open AI Chat clicked!");
+		router.push("/chat");
 	};
 
 	const handleViewHistory = () => {

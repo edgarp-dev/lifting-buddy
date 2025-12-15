@@ -5,7 +5,8 @@ import {
 	WeeklySession,
 	WorkoutSet,
 	WorkoutSessionsResponse,
-	WorkoutSessionDetail
+	WorkoutSessionDetail,
+	ChatResponse
 } from "@/types";
 
 interface ApiRequestOptions extends RequestInit {
@@ -86,6 +87,16 @@ class ApiClient {
 				method: "GET",
 			}
 		);
+	}
+
+	async sendChatMessage(query: string) {
+		return this.request<ChatResponse>(
+			"/api/v1/chat",
+			{
+				method: "POST",
+				body: JSON.stringify({ query }),
+			}
+		)
 	}
 
 	private async request<T>(

@@ -93,3 +93,14 @@ export interface WorkoutSessionDetail {
     created_at: string;
     exercises: WorkoutExerciseDetail[];
 }
+
+export interface ChatMessage {
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: string;
+}
+
+export interface ChatResponse {
+    answer: string;
+}

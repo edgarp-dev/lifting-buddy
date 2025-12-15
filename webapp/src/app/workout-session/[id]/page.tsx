@@ -51,7 +51,6 @@ export default function WorkoutSessionPage() {
     return (
         <div className="min-h-screen bg-[var(--background-primary)]">
             <SessionDetailHeader />
-
             <div className="max-w-2xl mx-auto px-6 py-6">
                 <p className="text-sm text-[var(--text-secondary)] mb-6">
                     {formattedDate}
