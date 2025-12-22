@@ -13,6 +13,15 @@ router.get("/", (ctx) => {
 
 // v1
 const apiPrefix = "/api/v1";
+
+router.get(`${apiPrefix}/info`, async (ctx) => {
+  ctx.response.status = Status.OK;
+  ctx.response.body = {
+    name: "Lifting Buddy API",
+    version: "1.0.0"
+  }
+});
+
 router.post(`${apiPrefix}/workouts/exercise-definition`, async (ctx) => {
   try {
     const schema = z.object({
@@ -737,5 +746,6 @@ app.use(oakCors({
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-console.log("Server running on http://localhost:8000");
-await app.listen({ port: 8000 });
+const port = 8000;
+console.log(`Server running on port ${port}`);
+await app.listen({ port });

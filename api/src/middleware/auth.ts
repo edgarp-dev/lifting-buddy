@@ -1,6 +1,8 @@
 import { createClient, SupabaseClient, User } from "@supabase/supabase-js";
 import { Context, Status } from "@oak/oak";
 
+const PUBLIC_ROUTES = ["/", "/api/v1/info"];
+
 interface AppState {
     user?: User
     supabase?: SupabaseClient
@@ -10,6 +12,11 @@ export const authMiddleware = async (
     ctx: Context<AppState>,
     next: () => Promise<unknown>
 ) => {
+    if (PUBLIC_ROUTES.includes(ctx.request.url.pathname)) {
+        await next();
+        return;
+    }
+
     try {
         const authHeader = ctx.request.headers.get("Authorization");
 
