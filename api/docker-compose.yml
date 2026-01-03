@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: lifting-buddy-api
     ports:
-      - "8000:8000"
+      - "5000:8000"
     environment:
       - DB_PASSWORD=${DB_PASSWORD}
       - SUPABASE_URL=${SUPABASE_URL}
