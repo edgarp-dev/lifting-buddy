@@ -140,5 +140,5 @@ class ApiClient {
 
 // Export singleton instance
 export const api = new ApiClient(
-	process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+	process.env.NEXT_PUBLIC_REST_API_URL || "http://localhost:8000"
 );
