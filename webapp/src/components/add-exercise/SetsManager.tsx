@@ -67,7 +67,7 @@ export function SetsManager({
 			<h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
 				Performance
 			</h3>
-			<div className="grid grid-cols-[50px_1fr_1fr_44px] gap-3 mb-2 px-1">
+			<div className="grid grid-cols-[40px_1fr_1fr_40px] gap-2 mb-2 px-1">
 				<div className="text-sm font-medium text-[var(--text-secondary)] text-center">
 					Set
 				</div>
@@ -77,7 +77,7 @@ export function SetsManager({
 				<div className="text-sm font-medium text-[var(--text-secondary)]">
 					Weight (kg)
 				</div>
-				<div className="w-11"></div>
+				<div className="w-10"></div>
 			</div>
 			<div className="space-y-2">
 				{sets.map(({ set, reps, weight_kg }, index) => (
