@@ -480,20 +480,23 @@ router.get(`${apiPrefix}/search/exercises`, async (ctx) => {
   try {
     const SearchExercisesQuerySchema = z.object({
       q: z.string().min(1, "Search query is required"),
+      muscle_group: z.string().min(1, "Muscle group is required"),
     });
 
     const { url } = ctx.request;
     const queryParams = {
       q: url.searchParams.get("q") || "",
+      muscle_group: url.searchParams.get("muscle_group") || "",
     };
 
     const validatedParams = SearchExercisesQuerySchema.parse(queryParams);
-    const { q } = validatedParams;
+    const { q, muscle_group } = validatedParams;
 
     const { user, supabase } = ctx.state;
     const { data: exercises, error } = await supabase
       .rpc("search_exercises", {
         query_text: q,
+        filter_muscle_group: muscle_group,
       });
 
     if (error) {

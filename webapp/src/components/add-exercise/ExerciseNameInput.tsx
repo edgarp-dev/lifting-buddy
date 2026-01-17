@@ -37,7 +37,7 @@ export function ExerciseNameInput({
 		const timer = setTimeout(async () => {
 			try {
 				setIsSearching(true);
-				const response = await api.searchExercises(value);
+				const response = await api.searchExercises(value, muscleGroup);
 
 				if (response.success && response.data) {
 					setResults(response.data);
@@ -52,7 +52,7 @@ export function ExerciseNameInput({
 		}, 300);
 
 		return () => clearTimeout(timer);
-	}, [value]);
+	}, [value, muscleGroup]);
 
 	useEffect(() => {
 		function handleClickOutised(event: MouseEvent) {
