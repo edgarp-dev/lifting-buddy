@@ -46,12 +46,14 @@ class ApiClient {
 	}
 
 	async logWorkoutExercise(exerciseDefinitionId: string, sets: WorkoutSet[]) {
+		const workoutDate = new Date().toLocaleDateString("en-CA");
 		return this.request<ApiResponse<{ id: string }>>(
 			"/api/v1/workouts/exercise",
 			{
 				method: "POST",
 				body: JSON.stringify({
 					exercise_definition_id: exerciseDefinitionId,
+					workout_date: workoutDate,
 					sets,
 				}),
 			}

@@ -125,6 +125,7 @@ router.post(`${apiPrefix}/workouts/exercise`, async (ctx) => {
       exercise_definition_id: z.uuidv4(
         "Invalid exercise definition ID format",
       ),
+      workout_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Use YYYY-MM-DD"),
       sets: z.array(WorkoutSetSchema)
         .min(1, "At least one set is required")
         .max(20, "Maximum 20 sets allowed per exercise")
@@ -140,9 +141,8 @@ router.post(`${apiPrefix}/workouts/exercise`, async (ctx) => {
     const validated = CreateWorkoutExerciseSchema.parse(
       await ctx.request.body.json(),
     );
-    const { exercise_definition_id, sets } = validated;
+    const { exercise_definition_id, workout_date, sets } = validated;
     const { user, supabase } = ctx.state;
-    const today = new Date().toISOString().split("T")[0];
 
     const { data: exerciseDefinition, error: exerciseError } = await supabase
       .from("workout_exercise_definition")
@@ -168,7 +168,7 @@ router.post(`${apiPrefix}/workouts/exercise`, async (ctx) => {
       .from("workout_session")
       .select("id, workout_date")
       .eq("user_id", user.id)
-      .eq("workout_date", today)
+      .eq("workout_date", workout_date)
       .is("deleted_at", null)
       .maybeSingle();
 
@@ -176,12 +176,12 @@ router.post(`${apiPrefix}/workouts/exercise`, async (ctx) => {
       throw sessionFindError;
     }
     if (!session) {
-      console.log(`Creating new session for ${today}`);
+      console.log(`Creating new session for ${workout_date}`);
       const { data: newSession, error: sessionCreateError } = await supabase
         .from("workout_session")
         .insert({
           user_id: user.id,
-          workout_date: today,
+          workout_date: workout_date,
         })
         .select("id, workout_date")
         .single();
@@ -193,7 +193,7 @@ router.post(`${apiPrefix}/workouts/exercise`, async (ctx) => {
             .from("workout_session")
             .select("id, workout_date")
             .eq("user_id", user.id)
-            .eq("workout_date", today)
+            .eq("workout_date", workout_date)
             .is("deleted_at", null)
             .single();
           session = raced;

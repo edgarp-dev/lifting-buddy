@@ -21,7 +21,7 @@ export default class QueryAnalyzer {
 
   async extractDateRange(query: string): Promise<DateRange | null> {
     const today = new Date();
-    const currentDate = today.toISOString().split("T")[0];
+    const currentDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     const prompt = `
         Analyze the user query and determine if it's asking about a specific time period.
