@@ -107,45 +107,49 @@ export function ExerciseNameInput({
 						<div className="px-4 py-3 text-[var(--text-secondary)]">
 							Searching...
 						</div>
-					) : results.length > 0 ? (
-						<ul className="max-h-60 overflow-y-auto py-1">
-							{results.map((exercise) => (
-								<li
-									key={exercise.id}
-									onClick={() => {
-										onSelectExercise(exercise);
-										onChange(exercise.name);
-										setIsOpen(false);
-									}}
-									className="cursor-pointer px-4 py-2 hover:bg-[var(--background-tertiary)]"
-								>
-									<span className="font-medium text-[var(--text-primary)]">
-										{exercise.name}
-									</span>
-									<span className="ml-2 text-sm text-[var(--text-secondary)]">
-										{exercise.muscle_group}
-									</span>
-								</li>
-							))}
-						</ul>
 					) : (
-						<div className="px-4 py-3">
-							<p className="text-[var(--text-secondary)] mb-2">
-								No exercises found
-							</p>
-							<button
-								onClick={handleCreateExercise}
-								disabled={isCreating || !muscleGroup}
-								className="w-full px-4 py-2 rounded-lg bg-[var(--accent-primary)] text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-							>
-								{isCreating ? "Creating..." : `Create "${value}"`}
-							</button>
-							{!muscleGroup && (
-								<p className="text-[var(--accent-warning)] text-sm mt-2">
-									Select a muscle group first
+						<>
+							{results.length > 0 ? (
+								<ul className="max-h-60 overflow-y-auto py-1">
+									{results.map((exercise) => (
+										<li
+											key={exercise.id}
+											onClick={() => {
+												onSelectExercise(exercise);
+												onChange(exercise.name);
+												setIsOpen(false);
+											}}
+											className="cursor-pointer px-4 py-2 hover:bg-[var(--background-tertiary)]"
+										>
+											<span className="font-medium text-[var(--text-primary)]">
+												{exercise.name}
+											</span>
+											<span className="ml-2 text-sm text-[var(--text-secondary)]">
+												{exercise.muscle_group}
+											</span>
+										</li>
+									))}
+								</ul>
+							) : (
+								<p className="px-4 py-3 text-[var(--text-secondary)]">
+									No exercises found
 								</p>
 							)}
-						</div>
+							<div className="px-4 py-3 border-t border-[var(--border-default)]">
+								<button
+									onClick={handleCreateExercise}
+									disabled={isCreating || !muscleGroup}
+									className="w-full px-4 py-2 rounded-lg bg-[var(--accent-primary)] text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+								>
+									{isCreating ? "Creating..." : `Create "${value}"`}
+								</button>
+								{!muscleGroup && (
+									<p className="text-[var(--accent-warning)] text-sm mt-2">
+										Select a muscle group first
+									</p>
+								)}
+							</div>
+						</>
 					)}
 				</div>
 			)}
