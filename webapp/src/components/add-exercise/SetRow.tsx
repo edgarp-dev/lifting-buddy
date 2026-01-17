@@ -22,7 +22,7 @@ export function SetRow({
 	disabled = false,
 }: SetRowProps) {
 	return (
-		<div className="grid grid-cols-[40px_1fr_1fr_40px] gap-2 items-center">
+		<div className="grid grid-cols-[32px_1fr_1fr_32px] sm:grid-cols-[40px_1fr_1fr_40px] gap-2 items-center">
 			<div className="text-center text-[var(--text-primary)] font-medium">
 				{setNumber}
 			</div>
@@ -49,7 +49,7 @@ export function SetRow({
 			<button
 				onClick={onDelete}
 				disabled={disabled}
-				className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[var(--background-tertiary)] disabled:opacity-50 transition-colors"
+				className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg hover:bg-[var(--background-tertiary)] disabled:opacity-50 transition-colors"
 				aria-label="Delete set"
 			>
 				<TrashIcon size={18} className="text-[var(--accent-error)]" />

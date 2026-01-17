@@ -67,7 +67,7 @@ export function SetsManager({
 			<h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
 				Performance
 			</h3>
-			<div className="grid grid-cols-[40px_1fr_1fr_40px] gap-2 mb-2 px-1">
+			<div className="grid grid-cols-[32px_1fr_1fr_32px] sm:grid-cols-[40px_1fr_1fr_40px] gap-2 mb-2 px-1">
 				<div className="text-sm font-medium text-[var(--text-secondary)] text-center">
 					Set
 				</div>
