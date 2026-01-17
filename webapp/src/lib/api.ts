@@ -26,9 +26,9 @@ class ApiClient {
 		});
 	}
 
-	async searchExercises(query: string) {
+	async searchExercises(query: string, muscleGroup: string) {
 		return this.request<ApiResponse<ExerciseDefinition[]>>(
-			`/api/v1/search/exercises?q=${encodeURIComponent(query)}`,
+			`/api/v1/search/exercises?q=${encodeURIComponent(query)}&muscle_group=${encodeURIComponent(muscleGroup)}`,
 			{
 				method: "GET",
 			}
